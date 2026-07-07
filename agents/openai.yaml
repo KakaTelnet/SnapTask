@@ -1,4 +1,4 @@
 interface:
-  display_name: "kTask4AI"
+  display_name: "kTask4AI - AI Task Decomposition"
   short_description: "Create, dispatch, and review AI task cards"
   default_prompt: "Use $kTask4AI to create AI-ready task cards, dispatch them through my work loop, and review returned agent work."
