@@ -1,4 +1,4 @@
 interface:
   display_name: "kTask4AI"
-  short_description: "Create low-conflict AI task cards through conversation"
-  default_prompt: "Use $kTask4AI to create AI-ready task cards through a multi-turn decomposition conversation."
+  short_description: "Create, dispatch, and review AI task cards"
+  default_prompt: "Use $kTask4AI to create AI-ready task cards, dispatch them through my work loop, and review returned agent work."
