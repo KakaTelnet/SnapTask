@@ -1,0 +1,36 @@
+{
+  "name": "snaptask",
+  "version": "0.1.0",
+  "description": "Composable Codex skills for reviewing AI-agent Goals and decomposing approved work into verifiable task cards.",
+  "author": {
+    "name": "KakaTelnet",
+    "url": "https://github.com/KakaTelnet"
+  },
+  "homepage": "https://github.com/KakaTelnet/SnapTask",
+  "repository": "https://github.com/KakaTelnet/SnapTask",
+  "keywords": [
+    "ai-agent",
+    "goals",
+    "goal-review",
+    "task-decomposition",
+    "codex-skills"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "SnapTask",
+    "shortDescription": "Review Goals and decompose approved AI-agent work",
+    "longDescription": "SnapTask reviews whether an AI-agent Goal is verifiable, bounded, safe, and complete before turning approved work into low-conflict task cards.",
+    "developerName": "KakaTelnet",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Interactive",
+      "Read",
+      "Write"
+    ],
+    "defaultPrompt": [
+      "Review this Goal before I decompose it.",
+      "Turn this approved Goal into AI-ready task cards."
+    ],
+    "websiteURL": "https://github.com/KakaTelnet/SnapTask"
+  }
+}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "Snap Goal Review"
+  short_description: "Review goal quality with clear, constructive feedback"
+  default_prompt: "Use $snap-goal-review to assess this goal without rewriting it."

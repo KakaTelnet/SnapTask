@@ -1,9 +1,9 @@
 ---
-name: kTask4AI
-description: Guide a multi-turn decomposition and work-loop conversation that turns broad software or product goals into AI-ready task cards, dispatch plans, review checkpoints, follow-up cards, and integration decisions. Use when a user asks to split work, plan parallel AI agents, design task boundaries, coordinate multiple model changes, reduce merge conflicts, convert a broad requirement into task cards, track task-card progress, review completed agent work, or decide which parts must be serial versus parallel.
+name: task-decompose
+description: Use when broad software or product work must be split into AI-ready task cards, parallel or serial execution boundaries, dispatch prompts, review checkpoints, or integration decisions.
 ---
 
-# kTask4AI
+# Task Decompose
 
 Use this skill to guide a conversation that turns a broad initiative into low-conflict, independently verifiable task units for AI agents, then keeps those cards useful through dispatch, review, integration, and follow-up loops. Do not split by human job titles first. Split by cognitive isolation, stable contracts, conflict radius, invariants, and verification exits.
 
@@ -18,6 +18,17 @@ A good AI task is an independently understandable, independently changeable, ind
 Do not default to "frontend/backend/test/design" unless those boundaries also match low conflict and independent verification.
 
 Do not produce final task cards until the target behavior, shared contracts, conflict boundaries, and verification exits are clear. If any of these are missing, run a clarification round first.
+
+## Goal Handoff
+
+Treat `通过: Approved` from `$snap-goal-review` as the normal entry condition for handoff-ready task cards.
+
+- `通过: Approved`: preserve the Goal and review result, then map every card and verification exit back to its acceptance conditions.
+- `修订: Revision Required`: use Discovery Mode only to clarify the listed gaps; return the Goal to `$snap-goal` or its author before final cards.
+- `驳回: Rejected`: stop decomposition and request a replacement Goal.
+- Unreviewed Goal: allow Discovery or Draft Decomposition, label it unreviewed, and require review or an explicit user bypass before Final Task Card Mode.
+
+Never let decomposition silently weaken the Goal's boundaries, invariants, evidence requirements, source priorities, or stop rules.
 
 ## Mode Selection
 

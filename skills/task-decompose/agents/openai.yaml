@@ -1,0 +1,4 @@
+interface:
+  display_name: "Task Decompose"
+  short_description: "Create, dispatch, and review AI task cards"
+  default_prompt: "Use $task-decompose to create AI-ready task cards, dispatch them through my work loop, and review returned agent work."
