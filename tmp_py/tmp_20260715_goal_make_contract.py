@@ -105,13 +105,15 @@ def main() -> int:
                 for group in groups
             ):
                 failures.append(f"cases: {case['id']} has invalid must_include_any")
+        if "must_match" in case and (not isinstance(case["must_match"], list) or not case["must_match"] or any(not isinstance(pattern, str) or not pattern for pattern in case["must_match"])):
+            failures.append(f"cases: {case['id']} has invalid must_match")
 
     cases_by_id = {str(case["id"]): case for case in cases}
     fixture_contracts = {
         "bounded-investigation-draft-zh": {
             "must_include": ["有边界调查型", "完成证据", "停止与升级条件", "Residual risks"],
             "must_exclude": ["审核结果:"],
-            "must_include_any": [["不承诺找到根因", "不承诺一定找到根因", "发现根因不作保证", "不保证找到根因"]],
+            "must_match": ["(?:不承诺|不保证)[^。\n]{0,60}(?:找到|发现|确认)根因|(?:找到|发现|确认)根因[^。\n]{0,30}(?:不作保证|无法保证)|root cause is not guaranteed"],
         },
         "oversized-goal-zh": {
             "must_include": ["待确认"],

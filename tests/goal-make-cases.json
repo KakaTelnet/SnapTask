@@ -23,7 +23,7 @@
       "language": "zh",
       "input": "生成完整 Goal 草稿：在 4 小时内只读检查 auth-api/error.log、gateway/access.log 和最近 20 个认证相关提交，交付已验证事实、排除的假设、最可能原因、未知项和下一步；不保证找到根因；禁止修改代码、配置和数据。",
       "must_include": ["有边界调查型", "完成证据", "停止与升级条件", "Residual risks"],
-      "must_include_any": [["不承诺找到根因", "不承诺一定找到根因", "发现根因不作保证", "不保证找到根因"]],
+      "must_match": ["(?:不承诺|不保证)[^。\n]{0,60}(?:找到|发现|确认)根因|(?:找到|发现|确认)根因[^。\n]{0,30}(?:不作保证|无法保证)|root cause is not guaranteed"],
       "must_exclude": ["审核结果:"]
     },
     {

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import shutil
 import subprocess
 from pathlib import Path
@@ -71,6 +72,9 @@ def run_case(codex: str, case: dict[str, object], run_number: int) -> dict[str, 
     for alternatives in case.get("must_include_any", []):
         if not any(str(marker).casefold() in response_folded for marker in alternatives):
             failures.append(f"missing every alternative marker {alternatives!r}")
+    for pattern in case.get("must_match", []):
+        if re.search(str(pattern), response, re.IGNORECASE | re.MULTILINE) is None:
+            failures.append(f"missing required semantic pattern {pattern!r}")
     for marker in case["must_exclude"]:
         if str(marker).casefold() in response_folded:
             failures.append(f"found forbidden marker {marker!r}")
