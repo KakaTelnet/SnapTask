@@ -20,7 +20,10 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--ids", help="Comma-separated case ids; default is all cases")
     parser.add_argument("--repeat", type=int, default=1)
-    return parser.parse_args()
+    args = parser.parse_args()
+    if args.repeat < 1:
+        parser.error("--repeat must be at least 1")
+    return args
 
 
 def run_case(codex: str, case: dict[str, object], run_number: int) -> dict[str, object]:

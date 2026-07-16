@@ -48,7 +48,7 @@
       "language": "zh",
       "input": "Goal 是重做整个 SaaS，包括认证、计费、CRM、数据仓库和移动端。",
       "must_include": ["待确认"],
-      "must_include_any": [["拆分", "拆成多个 Goal", "分成多个 Goal", "多个独立"]],
+      "must_include_any": [["拆成多个 Goal", "多个独立"]],
       "must_exclude": ["Goal 类型：", "审核结果:"]
     },
     {

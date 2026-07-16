@@ -10,6 +10,7 @@ ROOT = Path(__file__).resolve().parents[1]
 SKILL = ROOT / "skills" / "snap-goal-make" / "SKILL.md"
 TEMPLATE = ROOT / "skills" / "snap-goal-make" / "references" / "goal-template.md"
 CASES = ROOT / "tests" / "goal-make-cases.json"
+RUNNER = ROOT / "tmp_py" / "tmp_20260715_run_goal_make_evals.py"
 
 AGENT = ROOT / "skills" / "snap-goal-make" / "agents" / "openai.yaml"
 REVIEW_SKILL = ROOT / "skills" / "snap-goal-review" / "SKILL.md"
@@ -26,6 +27,11 @@ def require(text: str, fragments: list[str], source: str) -> list[str]:
 def main() -> int:
     """Validate Maker protocol, template, and evaluation coverage."""
     failures: list[str] = []
+    runner_text = RUNNER.read_text(encoding="utf-8") if RUNNER.exists() else ""
+    failures.extend(require(runner_text, [
+        "if args.repeat < 1:",
+        'parser.error("--repeat must be at least 1")',
+    ], "tmp_20260715_run_goal_make_evals.py"))
     if not SKILL.exists():
         failures.append("skill: missing skills/snap-goal-make/SKILL.md")
         skill_text = ""
@@ -118,7 +124,7 @@ def main() -> int:
         "oversized-goal-zh": {
             "must_include": ["待确认"],
             "must_exclude": ["Goal 类型：", "审核结果:"],
-            "must_include_any": [["拆分", "拆成多个 Goal", "分成多个 Goal", "多个独立"]],
+            "must_include_any": [["拆成多个 Goal", "多个独立"]],
         },
     }
     for case_id, expected in fixture_contracts.items():
