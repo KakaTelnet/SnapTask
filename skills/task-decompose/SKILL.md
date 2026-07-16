@@ -24,7 +24,7 @@ Do not produce final task cards until the target behavior, shared contracts, con
 Treat `通过: Approved` from `$snap-goal-review` as the normal entry condition for handoff-ready task cards.
 
 - `通过: Approved`: preserve the Goal and review result, then map every card and verification exit back to its acceptance conditions.
-- `修订: Revision Required`: use Discovery Mode only to clarify the listed gaps; return the Goal to `$snap-goal` or its author before final cards.
+- `修订: Revision Required`: use Discovery Mode only to clarify the listed gaps; return the Goal to `$snap-goal-make` or its author before final cards.
 - `驳回: Rejected`: stop decomposition and request a replacement Goal.
 - Unreviewed Goal: allow Discovery or Draft Decomposition, label it unreviewed, and require review or an explicit user bypass before Final Task Card Mode.
 

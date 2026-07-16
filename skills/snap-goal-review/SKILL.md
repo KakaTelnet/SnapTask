@@ -29,7 +29,7 @@ Default to review-only behavior. Do not rewrite the Goal, invent requirements, p
 ## Handoff Contract
 
 - `通过: Approved`: hand the unchanged Goal, review result, and evidence expectations to `$task-decompose`.
-- `修订: Revision Required`: return findings to `$snap-goal` when available, or to the Goal author. Do not produce final task cards.
+- `修订: Revision Required`: return findings to `$snap-goal-make` when available, or to the Goal author. Do not produce final task cards.
 - `驳回: Rejected`: stop decomposition and request a fundamentally redefined Goal.
 - Never upgrade a result during handoff or silently weaken acceptance, boundaries, constraints, evidence, or stop rules.
 

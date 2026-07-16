@@ -1,0 +1,4 @@
+interface:
+  display_name: "Snap Goal Make"
+  short_description: "Create complete Goals through guided conversation"
+  default_prompt: "Use $snap-goal-make to turn this intent into a complete Goal through multi-turn conversation, then hand the confirmed Goal to $snap-goal-review."

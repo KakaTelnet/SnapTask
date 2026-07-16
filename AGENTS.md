@@ -4,6 +4,7 @@
 
 This repository contains a collection of composable Codex skills for defining, reviewing, and decomposing AI-agent work.
 
+- `skills/snap-goal-make/` contains the guided Goal generator.
 - `skills/task-decompose/` contains the task decomposition and work-loop skill.
 - `skills/snap-goal-review/` contains the independent Goal quality reviewer.
 - `.codex-plugin/plugin.json` exposes the collection as the `snaptask` Codex plugin.
@@ -19,6 +20,9 @@ There is no build step for this repository. Validate changes with lightweight ch
 - `sed -n '1,220p' skills/task-decompose/SKILL.md` reviews the decomposition workflow.
 - `sed -n '1,220p' skills/task-decompose/references/task-card.md` reviews the handoff template.
 - `sed -n '1,220p' skills/snap-goal-review/SKILL.md` reviews the Goal reviewer.
+- `sed -n '1,260p' skills/snap-goal-make/SKILL.md` reviews the multi-turn Goal creation workflow.
+- `sed -n '1,260p' skills/snap-goal-make/references/goal-template.md` reviews the canonical Goal forms.
+- `python3 tmp_py/tmp_20260715_goal_make_contract.py` checks the Maker contract and fixture coverage.
 - `python3 /path/to/plugin-creator/scripts/validate_plugin.py .` validates plugin discovery metadata.
 
 If you add generated validation scripts, place temporary scripts in `tmp_py/` and keep them out of the skill runtime unless they become intentionally maintained tooling.
@@ -39,6 +43,9 @@ No automated test framework is configured. Before submitting changes, manually v
 - Each skill directory matches its front matter `name`.
 - Relative links and file references point to existing files within the owning skill.
 - Any task-card changes preserve all fields needed for handoff-ready work.
+- Goal Maker never scores or emits a review verdict as its own judgment.
+- Confirmed Goal drafts hand off to `$snap-goal-review`; approved Goals hand off unchanged to `$task-decompose`.
+- `tests/goal-make-cases.json` retains all required Discovery, Draft, Revision, Rejected, Approved, and bypass scenarios.
 
 ## Commit & Pull Request Guidelines
 
