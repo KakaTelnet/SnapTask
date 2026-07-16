@@ -1,0 +1,100 @@
+"""Check the Snap Goal Make contract and persistent evaluation cases."""
+
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+
+ROOT = Path(__file__).resolve().parents[1]
+SKILL = ROOT / "skills" / "snap-goal-make" / "SKILL.md"
+TEMPLATE = ROOT / "skills" / "snap-goal-make" / "references" / "goal-template.md"
+CASES = ROOT / "tests" / "goal-make-cases.json"
+
+
+def require(text: str, fragments: list[str], source: str) -> list[str]:
+    """Return missing required fragments for one contract source."""
+    return [f"{source}: missing {item!r}" for item in fragments if item not in text]
+
+
+def main() -> int:
+    """Validate Maker protocol, template, and evaluation coverage."""
+    failures: list[str] = []
+    if not SKILL.exists():
+        failures.append("skill: missing skills/snap-goal-make/SKILL.md")
+        skill_text = ""
+    else:
+        skill_text = SKILL.read_text(encoding="utf-8")
+    if not TEMPLATE.exists():
+        failures.append("template: missing references/goal-template.md")
+        template_text = ""
+    else:
+        template_text = TEMPLATE.read_text(encoding="utf-8")
+
+    failures.extend(require(skill_text, [
+        "name: snap-goal-make",
+        "Progressive Summary",
+        "Authorized Context",
+        "Outcome Goal",
+        "Bounded Investigation Goal",
+        "$snap-goal-review",
+        "$task-decompose",
+        "Unreviewed Draft",
+        "complete Goal",
+        "Do not score",
+    ], "snap-goal-make/SKILL.md"))
+    failures.extend(require(template_text, [
+        "Goal Type",
+        "Background and Value",
+        "Acceptance Criteria",
+        "Completion Evidence",
+        "Scope and Authority",
+        "Constraints and Priorities",
+        "Sources of Truth",
+        "Assumptions and Unknowns",
+        "Stop and Escalation Conditions",
+        "Completion Report Requirements",
+        "Unfinished",
+        "Unverifiable",
+        "Blocked",
+        "Out of scope",
+        "Residual risks",
+    ], "goal-template.md"))
+
+    payload = json.loads(CASES.read_text(encoding="utf-8"))
+    cases = payload["cases"]
+    expected_ids = {
+        "discovery-vague-outcome-zh",
+        "context-aware-software-zh",
+        "bounded-investigation-draft-zh",
+        "labeled-low-risk-assumption-zh",
+        "source-conflict-zh",
+        "oversized-goal-zh",
+        "existing-draft-gap-zh",
+        "revision-complete-regeneration-zh",
+        "rejected-redefine-zh",
+        "approved-unchanged-handoff-zh",
+        "unreviewed-draft-zh",
+        "role-only-when-relevant-zh",
+        "maker-never-judges-en",
+        "flexible-compact-goal-zh",
+    }
+    observed_ids = {str(case["id"]) for case in cases}
+    if observed_ids != expected_ids:
+        failures.append(f"cases: ids differ: {sorted(observed_ids ^ expected_ids)}")
+    for case in cases:
+        for key in ("id", "mode", "language", "input", "must_include", "must_exclude"):
+            if key not in case:
+                failures.append(f"cases: {case.get('id', '<unknown>')} missing {key}")
+
+    if failures:
+        print("GOAL MAKE CONTRACT FAIL")
+        for failure in failures:
+            print(f"- {failure}")
+        return 1
+    print(f"GOAL MAKE CONTRACT PASS: {len(cases)} evaluation cases")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
