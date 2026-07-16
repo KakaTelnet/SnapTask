@@ -18,6 +18,13 @@ Respond in the user's language. For Chinese output, localize the canonical headi
 | Stop and Escalation Conditions | 停止与升级条件 |
 | Completion Report Requirements | 完成报告要求 |
 
+For Chinese output, localize canonical Goal type values exactly:
+
+| Canonical Goal type | Chinese Goal type value |
+| --- | --- |
+| Outcome Goal | 结果型 |
+| Bounded Investigation Goal | 有边界调查型 |
+
 ## Outcome Goal
 
 ```text

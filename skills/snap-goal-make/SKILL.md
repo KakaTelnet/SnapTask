@@ -86,7 +86,7 @@ End with one primary question. Do not print the complete Goal on every turn.
 
 When the consequential decisions are resolved, generate one complete Goal using every heading in `references/goal-template.md`. Keep the length proportional to risk and complexity. Explain why a field is not applicable instead of omitting it.
 
-- Respond in the user's language and apply the exact localized heading map from the template.
+- Respond in the user's language and apply the exact localized heading and Goal type value maps from the template.
 - Number acceptance criteria `AC-1`, `AC-2`, and so on.
 - Map every acceptance ID to concrete evidence and a verification method.
 - Include source priority or explain why conflict handling is not applicable.

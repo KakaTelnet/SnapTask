@@ -17,6 +17,7 @@ TASK_SKILL = ROOT / "skills" / "task-decompose" / "SKILL.md"
 PLUGIN = ROOT / ".codex-plugin" / "plugin.json"
 GUIDE = ROOT / "AGENTS.md"
 
+
 def require(text: str, fragments: list[str], source: str) -> list[str]:
     """Return missing required fragments for one contract source."""
     return [f"{source}: missing {item!r}" for item in fragments if item not in text]
@@ -66,6 +67,8 @@ def main() -> int:
         "Blocked",
         "Out of scope",
         "Residual risks",
+        "| Outcome Goal | 结果型 |",
+        "| Bounded Investigation Goal | 有边界调查型 |",
     ], "goal-template.md"))
 
     payload = json.loads(CASES.read_text(encoding="utf-8"))
