@@ -31,6 +31,19 @@ def main() -> int:
     failures.extend(require(runner_text, [
         "if args.repeat < 1:",
         'parser.error("--repeat must be at least 1")',
+        '"--validate-existing"',
+        '"--self-test"',
+        "def validate_response(",
+        "def validate_complete_goal(",
+        "def validate_handoff_goal(",
+        "subprocess.TimeoutExpired",
+        "unlink_artifact(output_path)",
+        "unlink_artifact(stderr_path)",
+        "validate_existing(cases, args.repeat)",
+        "for run_number in range(1, repeat + 1)",
+        "missing retained output",
+        "Overall score: 9/12",
+        "Review result: Approved",
     ], "tmp_20260715_run_goal_make_evals.py"))
     if not SKILL.exists():
         failures.append("skill: missing skills/snap-goal-make/SKILL.md")
@@ -56,7 +69,13 @@ def main() -> int:
         "Do not score",
         "Do not create, require, or simulate a programmatic JSON review return.",
         "Consume snap-goal-review's existing human-readable contract.",
+        "every normative user decision in the complete Goal",
+        "The complete Goal is the sole normative contract.",
     ], "snap-goal-make/SKILL.md"))
+    if "Explicit user decisions that are not already legible in the Goal." in skill_text:
+        failures.append(
+            "snap-goal-make/SKILL.md: hidden normative handoff allowance remains"
+        )
     failures.extend(require(template_text, [
         "Goal Type",
         "Background and Value",
@@ -78,6 +97,8 @@ def main() -> int:
     ], "goal-template.md"))
 
     payload = json.loads(CASES.read_text(encoding="utf-8"))
+    if payload.get("schema_version") != 2:
+        failures.append(f"cases: expected schema_version 2, got {payload.get('schema_version')!r}")
     cases = payload["cases"]
     expected_ids = {
         "discovery-vague-outcome-zh",
@@ -102,6 +123,16 @@ def main() -> int:
         for key in ("id", "mode", "language", "input", "must_include", "must_exclude"):
             if key not in case:
                 failures.append(f"cases: {case.get('id', '<unknown>')} missing {key}")
+        mode = case.get("mode")
+        if mode in {"draft", "revision"} and case.get("requires_complete_goal") is not True:
+            failures.append(f"cases: {case['id']} must require a complete Goal")
+        if mode in {"discovery", "draft", "revision"} and case.get("reject_maker_judgment") is not True:
+            failures.append(f"cases: {case['id']} must reject Maker judgment patterns")
+        if mode == "handoff":
+            if case.get("requires_exact_handoff_goal") is not True:
+                failures.append(f"cases: {case['id']} must require the exact handoff Goal")
+            if not isinstance(case.get("goal_text"), str) or not case["goal_text"].strip():
+                failures.append(f"cases: {case['id']} must provide a non-empty goal_text")
         if "must_include_any" in case:
             groups = case["must_include_any"]
             if not isinstance(groups, list) or any(
@@ -134,6 +165,29 @@ def main() -> int:
             continue
         for key, value in expected.items():
             if case.get(key) != value:
+                failures.append(f"cases: {case_id} {key} must equal {value!r}")
+
+    exact_flag_contracts = {
+        "discovery-vague-outcome-zh": {"reject_maker_judgment": True},
+        "context-aware-software-zh": {"reject_maker_judgment": True},
+        "bounded-investigation-draft-zh": {"requires_complete_goal": True, "reject_maker_judgment": True},
+        "labeled-low-risk-assumption-zh": {"reject_maker_judgment": True},
+        "source-conflict-zh": {"reject_maker_judgment": True},
+        "oversized-goal-zh": {"reject_maker_judgment": True},
+        "existing-draft-gap-zh": {"reject_maker_judgment": True},
+        "revision-complete-regeneration-zh": {"requires_complete_goal": True, "reject_maker_judgment": True},
+        "approved-unchanged-handoff-zh": {"requires_exact_handoff_goal": True},
+        "unreviewed-draft-zh": {"requires_complete_goal": True, "reject_maker_judgment": True},
+        "role-only-when-relevant-zh": {"requires_complete_goal": True, "reject_maker_judgment": True},
+        "maker-never-judges-en": {"requires_complete_goal": True, "reject_maker_judgment": True},
+        "flexible-compact-goal-zh": {"requires_complete_goal": True, "reject_maker_judgment": True},
+    }
+    for case_id, expected in exact_flag_contracts.items():
+        case = cases_by_id.get(case_id)
+        if case is None:
+            continue
+        for key, value in expected.items():
+            if case.get(key) is not value:
                 failures.append(f"cases: {case_id} {key} must equal {value!r}")
 
     maker_case = next(

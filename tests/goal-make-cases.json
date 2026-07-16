@@ -1,10 +1,11 @@
 {
-  "schema_version": 1,
+  "schema_version": 2,
   "cases": [
     {
       "id": "discovery-vague-outcome-zh",
       "mode": "discovery",
       "language": "zh",
+      "reject_maker_judgment": true,
       "input": "我想让登录功能更好。现在开始帮我生成 Goal。",
       "must_include": ["已确认", "暂定假设", "待确认"],
       "must_exclude": ["审核结果:", "综合评分:", "通过: Approved"]
@@ -13,6 +14,7 @@
       "id": "context-aware-software-zh",
       "mode": "discovery",
       "language": "zh",
+      "reject_maker_judgment": true,
       "input": "为当前 SnapTask 项目新增 Goal 创建能力。先读取当前项目中被授权读取的 AGENTS.md、插件清单和相关 Skill，再继续访谈。",
       "must_include": ["AGENTS.md", "已确认", "待确认"],
       "must_exclude": ["无法访问任何本地文件", "综合评分:"]
@@ -21,6 +23,8 @@
       "id": "bounded-investigation-draft-zh",
       "mode": "draft",
       "language": "zh",
+      "requires_complete_goal": true,
+      "reject_maker_judgment": true,
       "input": "生成完整 Goal 草稿：在 4 小时内只读检查 auth-api/error.log、gateway/access.log 和最近 20 个认证相关提交，交付已验证事实、排除的假设、最可能原因、未知项和下一步；不保证找到根因；禁止修改代码、配置和数据。",
       "must_include": ["有边界调查型", "完成证据", "停止与升级条件", "Residual risks"],
       "must_match": ["(?:不承诺|不保证)[^。\n]{0,60}(?:找到|发现|确认)根因|(?:找到|发现|确认)根因[^。\n]{0,30}(?:不作保证|无法保证)|root cause is not guaranteed"],
@@ -30,6 +34,7 @@
       "id": "labeled-low-risk-assumption-zh",
       "mode": "discovery",
       "language": "zh",
+      "reject_maker_judgment": true,
       "input": "目标是给内部工具补充导出功能。默认使用现有测试框架这种低风险细节你可以决定，但必须说明你的假设。",
       "must_include": ["暂定假设", "现有测试框架"],
       "must_exclude": ["用户已确认使用现有测试框架", "综合评分:"]
@@ -38,6 +43,7 @@
       "id": "source-conflict-zh",
       "mode": "discovery",
       "language": "zh",
+      "reject_maker_judgment": true,
       "input": "API 文档说订单状态叫 paid，集成测试却断言 completed。请继续生成 Goal，但我还没决定以哪个为准。",
       "must_include": ["paid", "completed", "待确认"],
       "must_exclude": ["已决定以 API 文档为准", "已决定以集成测试为准", "审核结果:"]
@@ -46,6 +52,7 @@
       "id": "oversized-goal-zh",
       "mode": "discovery",
       "language": "zh",
+      "reject_maker_judgment": true,
       "input": "Goal 是重做整个 SaaS，包括认证、计费、CRM、数据仓库和移动端。",
       "must_include": ["待确认"],
       "must_include_any": [["拆成多个 Goal", "多个独立"]],
@@ -55,6 +62,7 @@
       "id": "existing-draft-gap-zh",
       "mode": "discovery",
       "language": "zh",
+      "reject_maker_judgment": true,
       "input": "已有草稿：让报表 p95 小于 30 秒；范围是 reports；不改数据库；用 benchmark 验证。请只处理关键缺口。",
       "must_include": ["已确认", "待确认"],
       "must_exclude": ["请重新描述你的目标", "综合评分:"]
@@ -63,6 +71,8 @@
       "id": "revision-complete-regeneration-zh",
       "mode": "revision",
       "language": "zh",
+      "requires_complete_goal": true,
+      "reject_maker_judgment": true,
       "input": "当前 Goal：让 checkout 成功时进入收据页、拒付时显示安全错误；AC-1 用 checkout-success 集成测试验证；AC-2 尚无证据；只改 web/checkout 及测试；不改 API 和数据库；保持现有错误语义；质量优先于速度；API schema 高于现有测试，冲突时升级；两次尝试没有新证据、没有减少阻塞且没有合理替代路径时停止；高风险或后端修改前确认；完成报告列出全部剩余工作类别。Reviewer 返回修订: Revision Required。问题：AC-2 没有证据。影响：无法判断失败路径是否完成。修改要求：指定失败路径测试。我的决定：使用 checkout-decline 集成测试。现在重新生成完整 Goal。",
       "must_include": ["Goal 类型", "AC-2", "checkout-decline", "完成报告要求"],
       "must_exclude": ["Patch", "补丁", "G-01", "综合评分:"]
@@ -79,15 +89,18 @@
       "id": "approved-unchanged-handoff-zh",
       "mode": "handoff",
       "language": "zh",
-      "goal_text": "目标：现有邮箱登录在成功、无效凭据和网络失败时均产生可观察结果。",
+      "requires_exact_handoff_goal": true,
+      "goal_text": "Goal 类型:\n结果型\n\n背景与价值:\n现有邮箱登录的成功、无效凭据和网络失败路径需要向用户产生可观察且可验证的结果。\n\n目标:\n让现有邮箱登录在成功、无效凭据和网络失败时均产生可观察结果。\n\n验收标准:\n- AC-1: 有效凭据进入既有登录后路由。\n- AC-2: 无效凭据显示既有通用安全错误。\n- AC-3: 网络失败显示可重试操作。\n\n完成证据:\n| Acceptance ID | Required evidence | Verification method |\n| --- | --- | --- |\n| AC-1 | 登录集成测试 | 运行既有登录集成测试 |\n| AC-2 | 无效凭据集成测试 | 验证通用安全错误 |\n| AC-3 | 网络失败 UI 测试 | 验证重试操作 |\n\n范围与权限:\n- Included: `web/auth` 和其测试。\n- Excluded: 后端 API、注册、密码重置和视觉重设计。\n- Allowed: 修改授权范围内的前端认证实现与测试。\n- Prohibited: 未经确认不得修改后端、schema 或安全策略。\n\n约束与优先级:\n- Preserve: 现有认证契约、重定向和账户枚举保护。\n- Limits: 不降低安全语义以换取通过。\n- Trade-off priority: 认证安全和可验证性优先于实现速度。\n\n事实来源:\n- Authority: 现有 auth API schema 和登录集成测试。\n- Conflict rule: 来源冲突时升级并请求确认。\n\n假设与未知项:\n- Assumptions: 无。\n- Unknowns: 无。\n\n停止与升级条件:\n- Complete when every acceptance criterion has its required evidence.\n- Stop after two attempts with no new evidence, no reduced blocker, and no reasonable alternative.\n- Request confirmation before backend, schema, security-policy, or destructive changes.\n\n完成报告要求:\n- Completed and evidence\n- Unfinished\n- Unverifiable\n- Blocked\n- Out of scope\n- Residual risks",
       "input": "Reviewer 已返回通过: Approved。请处理该 Goal。",
-      "must_include": ["$task-decompose", "目标：现有邮箱登录在成功、无效凭据和网络失败时均产生可观察结果。"],
+      "must_include": ["$task-decompose", "目标:\n让现有邮箱登录在成功、无效凭据和网络失败时均产生可观察结果。"],
       "must_exclude": ["改写后的 Goal", "新的验收标准", "综合评分:"]
     },
     {
       "id": "unreviewed-draft-zh",
       "mode": "draft",
       "language": "zh",
+      "requires_complete_goal": true,
+      "reject_maker_judgment": true,
       "input": "跳过审核，直接生成完整草稿：把 README 中失效的 install-old 命令替换为 CLI --help 中的 install-new；AC-1 是新用户逐条执行 README 命令均成功，证据是终端退出码和输出；只改 README，不改代码；CLI --help 是唯一事实来源；文档准确性优先；两次尝试无新证据且无替代路径时停止；代码修改或发布前确认；完成报告列出全部剩余工作类别。",
       "must_include": ["Unreviewed Draft"],
       "must_exclude": ["通过: Approved", "已经适合执行", "自动交给 $task-decompose"]
@@ -96,6 +109,8 @@
       "id": "role-only-when-relevant-zh",
       "mode": "draft",
       "language": "zh",
+      "requires_complete_goal": true,
+      "reject_maker_judgment": true,
       "input": "生成完整 Goal：优化 web/ 的雷达图可读性；AC-1 是五名目标用户中至少四名能正确说出最高和最低维度，证据是可用性记录；只能修改 web/ 和对应测试，后端需求写入 handoff，不得修改 backend/；保持数据含义和 API；用户理解优先于视觉装饰；现有产品术语表高于组件文案；两次尝试无新证据且无替代路径时停止，涉及后端或数据语义时确认；以前端体验视角评估用户是否读得懂；完成报告列出全部剩余工作类别。",
       "must_include": ["前端体验", "web/", "backend/", "handoff"],
       "must_exclude": ["后端负责人", "审核结果:"]
@@ -104,6 +119,8 @@
       "id": "maker-never-judges-en",
       "mode": "draft",
       "language": "en",
+      "requires_complete_goal": true,
+      "reject_maker_judgment": true,
       "input": "Create a complete Goal draft for a four-hour read-only accessibility audit of the login and checkout pages. Inspect keyboard navigation, labels, focus order, and contrast; deliver findings mapped to WCAG 2.2 AA with screenshots and reproduction steps. Do not change code or data. WCAG 2.2 is authoritative; escalate conflicts with local guidance. Evidence quality outranks finding count. Stop at four hours or after two attempts with no new evidence, no reduced blocker, and no reasonable alternative. Request confirmation before sensitive access or any write. Require all remaining-work categories. Do not review or score it. Consume snap-goal-review's existing human-readable review contract; do not create, require, or simulate a programmatic JSON review return.",
       "must_include": ["Goal type", "Acceptance criteria", "Evidence", "Stop and escalation"],
       "must_exclude": ["Review result:", "Overall score:", "通过: Approved", "修订: Revision Required", "驳回: Rejected"]
@@ -112,6 +129,8 @@
       "id": "flexible-compact-goal-zh",
       "mode": "draft",
       "language": "zh",
+      "requires_complete_goal": true,
+      "reject_maker_judgment": true,
       "input": "生成简洁但完整的 Goal：把 README 中已失效的安装命令改成当前可运行命令；只改 README；以当前 CLI --help 为准；用文档命令逐条执行结果验收；不涉及代码。",
       "must_include": ["Goal 类型", "验收标准", "完成证据", "范围与权限", "事实来源", "停止与升级条件"],
       "must_exclude": ["审核结果:", "G-01", "补丁式修订"]

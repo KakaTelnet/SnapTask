@@ -20,6 +20,7 @@ Create and revise Goals; do not judge their quality. `$snap-goal-review` is the 
 - After Review returns Approved, preserve the complete Goal unchanged.
 - Do not create, require, or simulate a programmatic JSON review return.
 - Consume snap-goal-review's existing human-readable contract.
+- Before confirmation or review, record every normative user decision in the complete Goal. A normative decision is any decision affecting outcome, acceptance, evidence, scope or authority, constraints or priorities, source priority or conflict handling, assumptions or unknowns, or stop or escalation behavior.
 
 ## Entry Selection
 
@@ -93,6 +94,7 @@ When the consequential decisions are resolved, generate one complete Goal using 
 - Include a precise no-progress rule and human escalation triggers.
 - Require the completion report to expose Completed, Unfinished, Unverifiable, Blocked, Out of scope, and Residual risks.
 - Include a role perspective only when it constrains authority, trade-offs, or review criteria.
+- Put every normative user decision in the complete Goal; do not leave one only in conversation context, a summary, or a handoff.
 
 Label the output `Goal Draft` and ask the user to confirm it before review. If the user explicitly skips review, label it `Unreviewed Draft`; do not claim it is execution-ready and do not proactively hand it to task decomposition. An explicit bypass is handled by `$task-decompose` under its own rules.
 
@@ -101,10 +103,9 @@ Label the output `Goal Draft` and ask the user to confirm it before review. If t
 After user confirmation, hand the complete Goal unchanged to `$snap-goal-review`. The handoff contains only:
 
 1. The confirmed complete Goal.
-2. Explicitly authorized sources needed for review.
-3. Explicit user decisions that are not already legible in the Goal.
+2. Authorized source provenance or access needed to inspect sources referenced by that Goal.
 
-Do not include persuasion, desired score, or a requested verdict. If `$snap-goal-review` is unavailable, return the complete Goal plus an exact prompt telling the user to review it with `$snap-goal-review`; never simulate the verdict.
+The complete Goal is the sole normative contract. Do not include hidden decisions, summary-only rules, persuasion, a desired score, or a requested verdict. Reviewer and Task Decompose must be able to act from the Goal and authorized source provenance alone. If `$snap-goal-review` is unavailable, return the complete Goal plus an exact prompt telling the user to review it with `$snap-goal-review`; never simulate the verdict.
 
 ## Result Handling
 
