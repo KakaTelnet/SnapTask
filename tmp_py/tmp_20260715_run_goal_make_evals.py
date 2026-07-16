@@ -68,6 +68,9 @@ def run_case(codex: str, case: dict[str, object], run_number: int) -> dict[str, 
     for marker in case["must_include"]:
         if str(marker).casefold() not in response_folded:
             failures.append(f"missing required marker {marker!r}")
+    for alternatives in case.get("must_include_any", []):
+        if not any(str(marker).casefold() in response_folded for marker in alternatives):
+            failures.append(f"missing every alternative marker {alternatives!r}")
     for marker in case["must_exclude"]:
         if str(marker).casefold() in response_folded:
             failures.append(f"found forbidden marker {marker!r}")

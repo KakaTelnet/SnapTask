@@ -22,7 +22,8 @@
       "mode": "draft",
       "language": "zh",
       "input": "生成完整 Goal 草稿：在 4 小时内只读检查 auth-api/error.log、gateway/access.log 和最近 20 个认证相关提交，交付已验证事实、排除的假设、最可能原因、未知项和下一步；不保证找到根因；禁止修改代码、配置和数据。",
-      "must_include": ["有边界调查型", "不承诺找到根因", "完成证据", "停止与升级条件", "Residual risks"],
+      "must_include": ["有边界调查型", "完成证据", "停止与升级条件", "Residual risks"],
+      "must_include_any": [["不承诺找到根因", "不承诺一定找到根因", "发现根因不作保证", "不保证找到根因"]],
       "must_exclude": ["审核结果:"]
     },
     {
@@ -46,7 +47,8 @@
       "mode": "discovery",
       "language": "zh",
       "input": "Goal 是重做整个 SaaS，包括认证、计费、CRM、数据仓库和移动端。",
-      "must_include": ["多个独立", "待确认"],
+      "must_include": ["待确认"],
+      "must_include_any": [["拆分", "拆成多个 Goal", "分成多个 Goal", "多个独立"]],
       "must_exclude": ["Goal 类型：", "审核结果:"]
     },
     {

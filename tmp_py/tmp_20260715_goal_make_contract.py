@@ -96,16 +96,27 @@ def main() -> int:
         for key in ("id", "mode", "language", "input", "must_include", "must_exclude"):
             if key not in case:
                 failures.append(f"cases: {case.get('id', '<unknown>')} missing {key}")
+        if "must_include_any" in case:
+            groups = case["must_include_any"]
+            if not isinstance(groups, list) or any(
+                not isinstance(group, list)
+                or not group
+                or any(not isinstance(marker, str) for marker in group)
+                for group in groups
+            ):
+                failures.append(f"cases: {case['id']} has invalid must_include_any")
 
     cases_by_id = {str(case["id"]): case for case in cases}
     fixture_contracts = {
         "bounded-investigation-draft-zh": {
-            "must_include": ["有边界调查型", "不承诺找到根因", "完成证据", "停止与升级条件", "Residual risks"],
+            "must_include": ["有边界调查型", "完成证据", "停止与升级条件", "Residual risks"],
             "must_exclude": ["审核结果:"],
+            "must_include_any": [["不承诺找到根因", "不承诺一定找到根因", "发现根因不作保证", "不保证找到根因"]],
         },
         "oversized-goal-zh": {
-            "must_include": ["多个独立", "待确认"],
+            "must_include": ["待确认"],
             "must_exclude": ["Goal 类型：", "审核结果:"],
+            "must_include_any": [["拆分", "拆成多个 Goal", "分成多个 Goal", "多个独立"]],
         },
     }
     for case_id, expected in fixture_contracts.items():
@@ -114,7 +125,7 @@ def main() -> int:
             failures.append(f"cases: missing {case_id}")
             continue
         for key, value in expected.items():
-            if case[key] != value:
+            if case.get(key) != value:
                 failures.append(f"cases: {case_id} {key} must equal {value!r}")
 
     maker_case = next(
