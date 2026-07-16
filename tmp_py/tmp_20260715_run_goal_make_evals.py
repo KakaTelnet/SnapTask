@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import shutil
 import subprocess
 from pathlib import Path
@@ -12,6 +13,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 CASES_PATH = ROOT / "tests" / "goal-make-cases.json"
 OUTPUT_DIR = Path("/private/tmp/snap-goal-make-evals")
+CODEX_HOME = Path("/private/tmp/snap-goal-make-eval-codex-home")
 
 
 def parse_args() -> argparse.Namespace:
@@ -59,6 +61,7 @@ def run_case(codex: str, case: dict[str, object], run_number: int) -> dict[str, 
         text=True,
         timeout=300,
         check=False,
+        env={**os.environ, "CODEX_HOME": str(CODEX_HOME)},
     )
     response = output_path.read_text(encoding="utf-8") if output_path.exists() else ""
     response_folded = response.casefold()
@@ -95,6 +98,7 @@ def main() -> int:
         if missing:
             raise SystemExit(f"unknown case ids: {sorted(missing)}")
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    CODEX_HOME.mkdir(parents=True, exist_ok=True)
     results = [
         run_case(codex, case, run_number)
         for case in cases
