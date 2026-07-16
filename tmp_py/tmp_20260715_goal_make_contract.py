@@ -42,6 +42,8 @@ def main() -> int:
         "Unreviewed Draft",
         "complete Goal",
         "Do not score",
+        "Do not create, require, or simulate a programmatic JSON review return.",
+        "Consume snap-goal-review's existing human-readable contract.",
     ], "snap-goal-make/SKILL.md"))
     failures.extend(require(template_text, [
         "Goal Type",
@@ -86,6 +88,19 @@ def main() -> int:
         for key in ("id", "mode", "language", "input", "must_include", "must_exclude"):
             if key not in case:
                 failures.append(f"cases: {case.get('id', '<unknown>')} missing {key}")
+
+    maker_case = next(
+        (case for case in cases if case.get("id") == "maker-never-judges-en"),
+        None,
+    )
+    if maker_case is not None:
+        maker_input = str(maker_case["input"])
+        for marker in (
+            "human-readable review contract",
+            "programmatic JSON review return",
+        ):
+            if marker not in maker_input:
+                failures.append(f"cases: maker-never-judges-en missing marker {marker!r}")
 
     if failures:
         print("GOAL MAKE CONTRACT FAIL")

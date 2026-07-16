@@ -102,7 +102,7 @@
       "id": "maker-never-judges-en",
       "mode": "draft",
       "language": "en",
-      "input": "Create a complete Goal draft for a four-hour read-only accessibility audit of the login and checkout pages. Inspect keyboard navigation, labels, focus order, and contrast; deliver findings mapped to WCAG 2.2 AA with screenshots and reproduction steps. Do not change code or data. WCAG 2.2 is authoritative; escalate conflicts with local guidance. Evidence quality outranks finding count. Stop at four hours or after two attempts with no new evidence, no reduced blocker, and no reasonable alternative. Request confirmation before sensitive access or any write. Require all remaining-work categories. Do not review or score it.",
+      "input": "Create a complete Goal draft for a four-hour read-only accessibility audit of the login and checkout pages. Inspect keyboard navigation, labels, focus order, and contrast; deliver findings mapped to WCAG 2.2 AA with screenshots and reproduction steps. Do not change code or data. WCAG 2.2 is authoritative; escalate conflicts with local guidance. Evidence quality outranks finding count. Stop at four hours or after two attempts with no new evidence, no reduced blocker, and no reasonable alternative. Request confirmation before sensitive access or any write. Require all remaining-work categories. Do not review or score it. Consume snap-goal-review's existing human-readable review contract; do not create, require, or simulate a programmatic JSON review return.",
       "must_include": ["Goal type", "Acceptance criteria", "Evidence", "Stop and escalation"],
       "must_exclude": ["Review result:", "Overall score:", "通过: Approved", "修订: Revision Required", "驳回: Rejected"]
     },

@@ -18,6 +18,8 @@ Create and revise Goals; do not judge their quality. `$snap-goal-review` is the 
 - Do not invent requirements, silently resolve source conflicts, or turn a recommendation into a confirmed user decision.
 - Do not use patch-based revision, Goal version numbers, or hidden persistent workflow state.
 - After Review returns Approved, preserve the complete Goal unchanged.
+- Do not create, require, or simulate a programmatic JSON review return.
+- Consume snap-goal-review's existing human-readable contract.
 
 ## Entry Selection
 
