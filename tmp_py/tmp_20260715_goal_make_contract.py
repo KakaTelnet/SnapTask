@@ -97,6 +97,26 @@ def main() -> int:
             if key not in case:
                 failures.append(f"cases: {case.get('id', '<unknown>')} missing {key}")
 
+    cases_by_id = {str(case["id"]): case for case in cases}
+    fixture_contracts = {
+        "bounded-investigation-draft-zh": {
+            "must_include": ["有边界调查型", "不承诺找到根因", "完成证据", "停止与升级条件", "Residual risks"],
+            "must_exclude": ["审核结果:"],
+        },
+        "oversized-goal-zh": {
+            "must_include": ["多个独立", "待确认"],
+            "must_exclude": ["Goal 类型：", "审核结果:"],
+        },
+    }
+    for case_id, expected in fixture_contracts.items():
+        case = cases_by_id.get(case_id)
+        if case is None:
+            failures.append(f"cases: missing {case_id}")
+            continue
+        for key, value in expected.items():
+            if case[key] != value:
+                failures.append(f"cases: {case_id} {key} must equal {value!r}")
+
     maker_case = next(
         (case for case in cases if case.get("id") == "maker-never-judges-en"),
         None,
