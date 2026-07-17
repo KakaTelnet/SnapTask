@@ -1,0 +1,31 @@
+test_metadata:
+  case_id: revision-checkout-evidence-gap
+  expected_review_result: "修订: Revision Required"
+  direction: 结账与支付体验
+  format: yaml
+  note: "使用 snap-goal-review 测试时，只使用 review_prompt_payload。"
+
+review_prompt_payload:
+  goal: "让结账确认流程变得可靠，使用户能够明确知道支付成功还是失败。"
+  background: "当前结账流程会让部分用户不确定订单是否已经创建。"
+  acceptance:
+    - "支付成功后进入收据页面。"
+    - "支付被拒时显示安全的失败提示。"
+    - "用户重复点击结账按钮时不会创建重复订单。"
+  scope:
+    included:
+      - "web/checkout"
+    excluded:
+      - "支付服务商集成"
+      - "后端订单 schema"
+  constraints:
+    - "保留现有支付 API 契约。"
+    - "不得存储支付卡数据。"
+  source_of_truth:
+    - "当前结账路由行为。"
+  evidence: "充分测试。"
+  stop_and_escalation:
+    - "后端修改前停止。"
+    - "当结账体验感觉可靠时完成。"
+  completion_report:
+    - "报告未知项和残余风险。"

@@ -1,0 +1,115 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "approved-email-login-complete",
+      "path": "goal-fixtures/01-approved-email-login.md",
+      "language": "zh",
+      "expected_status": "通过: Approved",
+      "allow_reference_revision": false,
+      "payload": {
+        "type": "section",
+        "marker": "# 审核输入内容"
+      }
+    },
+    {
+      "id": "revision-checkout-evidence-gap",
+      "path": "goal-fixtures/02-revision-checkout-evidence-gap.yaml",
+      "language": "zh",
+      "expected_status": "修订: Revision Required",
+      "allow_reference_revision": false,
+      "payload": {
+        "type": "yaml_key",
+        "key": "review_prompt_payload"
+      }
+    },
+    {
+      "id": "rejected-effort-only",
+      "path": "goal-fixtures/03-rejected-effort-only.txt",
+      "language": "zh",
+      "expected_status": "驳回: Rejected",
+      "allow_reference_revision": false,
+      "payload": {
+        "type": "section",
+        "marker": "审核输入内容\n============"
+      }
+    },
+    {
+      "id": "approved-bounded-incident-investigation",
+      "path": "goal-fixtures/04-approved-bounded-incident-investigation.md",
+      "language": "zh",
+      "expected_status": "通过: Approved",
+      "allow_reference_revision": false,
+      "payload": {
+        "type": "section",
+        "marker": "# 审核输入内容"
+      }
+    },
+    {
+      "id": "revision-source-conflict",
+      "path": "goal-fixtures/05-revision-source-conflict.json",
+      "language": "zh",
+      "expected_status": "修订: Revision Required",
+      "allow_reference_revision": false,
+      "payload": {
+        "type": "json_key",
+        "key": "review_prompt_payload"
+      }
+    },
+    {
+      "id": "revision-role-boundary-table",
+      "path": "goal-fixtures/06-revision-role-boundary-table.md",
+      "language": "zh",
+      "expected_status": "修订: Revision Required",
+      "allow_reference_revision": false,
+      "payload": {
+        "type": "section",
+        "marker": "# 审核输入内容"
+      }
+    },
+    {
+      "id": "rejected-unsafe-data-migration",
+      "path": "goal-fixtures/07-rejected-unsafe-data-migration.md",
+      "language": "zh",
+      "expected_status": "驳回: Rejected",
+      "allow_reference_revision": false,
+      "payload": {
+        "type": "section",
+        "marker": "# 审核输入内容"
+      }
+    },
+    {
+      "id": "revision-overprescribed-implementation",
+      "path": "goal-fixtures/08-revision-overprescribed-implementation.yaml",
+      "language": "zh",
+      "expected_status": "修订: Revision Required",
+      "allow_reference_revision": false,
+      "payload": {
+        "type": "yaml_key",
+        "key": "review_prompt_payload"
+      }
+    },
+    {
+      "id": "approved-report-performance-slo",
+      "path": "goal-fixtures/09-approved-report-performance-slo.md",
+      "language": "zh",
+      "expected_status": "通过: Approved",
+      "allow_reference_revision": false,
+      "payload": {
+        "type": "section",
+        "marker": "# 审核输入内容"
+      }
+    },
+    {
+      "id": "revision-ai-content-moderation",
+      "path": "goal-fixtures/10-revision-ai-content-moderation.txt",
+      "language": "zh",
+      "expected_status": "修订: Revision Required",
+      "allow_reference_revision": false,
+      "payload": {
+        "type": "section",
+        "marker": "审核输入内容\n============"
+      }
+    }
+  ]
+}

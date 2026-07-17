@@ -1,0 +1,36 @@
+test_metadata:
+  case_id: revision-overprescribed-implementation
+  expected_review_result: "修订: Revision Required"
+  direction: 移动端推送通知可靠性
+  format: yaml with over-prescribed implementation
+  note: "使用 snap-goal-review 测试时，只使用 review_prompt_payload。"
+
+review_prompt_payload:
+  role: "移动端工程师"
+  goal: "让订单更新的推送通知变得可靠。"
+  implementation_steps:
+    - "只修改 NotificationManager.swift 第 40-120 行。"
+    - "严格新增三个函数，名称分别为 handleA、handleB 和 handleC。"
+    - "只能使用一个 switch 语句和两个 guard 语句。"
+    - "不得触碰任何其他行。"
+  acceptance:
+    - "订单已发货通知能打开订单详情页。"
+    - "权限被拒绝时显示设置入口提示。"
+    - "token 刷新不再导致订阅丢失。"
+  scope:
+    included:
+      - "ios/notifications"
+    excluded:
+      - "后端推送服务"
+      - "订单 API"
+  constraints:
+    - "不得改变通知 payload 契约。"
+  source_of_truth:
+    - "现有推送 payload schema"
+  evidence:
+    - "模拟器截图"
+    - "单元测试输出"
+  stop_and_escalation:
+    - "后端修改前停止。"
+  completion_report:
+    - "报告残余风险。"

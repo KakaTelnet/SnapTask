@@ -9,6 +9,8 @@ import shutil
 import subprocess
 from pathlib import Path
 
+from tmp_20260717_goal_review_fixtures import load_fixture_cases
+
 
 ROOT = Path(__file__).resolve().parents[1]
 CASES_PATH = ROOT / "tests" / "goal-review-cases.json"
@@ -47,6 +49,16 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--ids", help="Comma-separated case ids; default is all cases")
     parser.add_argument("--repeat", type=int, default=1)
+    parser.add_argument(
+        "--fixtures",
+        action="store_true",
+        help="Use tests/goal-fixtures.json instead of compact evaluation cases",
+    )
+    parser.add_argument(
+        "--list",
+        action="store_true",
+        help="List selected cases after loading them without invoking a model",
+    )
     return parser.parse_args()
 
 
@@ -123,18 +135,27 @@ def review_case(codex: str, case: dict[str, object], run_number: int) -> dict[st
 def main() -> int:
     """Run selected evaluations and print a compact summary."""
     args = parse_args()
-    codex = shutil.which("codex")
-    if codex is None:
-        raise SystemExit("codex executable not found")
-
-    payload = json.loads(CASES_PATH.read_text(encoding="utf-8"))
-    cases = payload["cases"]
+    if args.fixtures:
+        cases = load_fixture_cases()
+    else:
+        payload = json.loads(CASES_PATH.read_text(encoding="utf-8"))
+        cases = payload["cases"]
     if args.ids:
         selected = set(args.ids.split(","))
         cases = [case for case in cases if case["id"] in selected]
         missing = selected - {case["id"] for case in cases}
         if missing:
             raise SystemExit(f"unknown case ids: {sorted(missing)}")
+
+    if args.list:
+        for case in cases:
+            print(f"{case['id']}: {case['expected_status']}")
+        print(f"CASE SUMMARY: {len(cases)} loaded")
+        return 0
+
+    codex = shutil.which("codex")
+    if codex is None:
+        raise SystemExit("codex executable not found")
 
     OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     results = [

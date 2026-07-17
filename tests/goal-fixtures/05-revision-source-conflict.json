@@ -1,0 +1,42 @@
+{
+  "test_metadata": {
+    "case_id": "revision-source-conflict",
+    "expected_review_result": "修订: Revision Required",
+    "direction": "订单与履约状态",
+    "format": "json",
+    "note": "使用 snap-goal-review 测试时，只使用 review_prompt_payload。"
+  },
+  "review_prompt_payload": {
+    "goal": "让页面展示的订单状态与真实履约状态一致。",
+    "background": "客服反馈，同一订单在订单列表和订单详情页显示的状态不一致。",
+    "acceptance": [
+      "订单列表和订单详情页对同一订单显示相同状态。",
+      "已取消订单绝不显示为已发货。",
+      "截图证明两个页面中的状态已经修正。"
+    ],
+    "scope": {
+      "included": ["web/orders"],
+      "excluded": ["后端履约逻辑", "仓库集成"]
+    },
+    "constraints": [
+      "不得修改后端 API。",
+      "保留现有用户可见状态标签。"
+    ],
+    "source_of_truth": [
+      "API 文档",
+      "集成测试",
+      "客服提供的生产示例"
+    ],
+    "evidence": [
+      "测试",
+      "截图"
+    ],
+    "stop_and_escalation": [
+      "后端修改前停止。",
+      "检查通过时完成。"
+    ],
+    "completion_report": [
+      "报告未知项和残余风险。"
+    ]
+  }
+}
