@@ -2,57 +2,37 @@
 
 ## Project Structure & Module Organization
 
-This repository contains a collection of composable Codex skills for defining, reviewing, and decomposing AI-agent work.
+SnapTask is a Codex plugin composed of three cooperating skills:
 
-- `skills/snap-goal-make/` contains the guided Goal generator.
-- `skills/task-decompose/` contains the task decomposition and work-loop skill.
-- `skills/snap-goal-review/` contains the independent Goal quality reviewer.
-- `.codex-plugin/plugin.json` exposes the collection as the `snaptask` Codex plugin.
-- Each skill owns its `SKILL.md`, optional `agents/openai.yaml`, and supporting `references/` files.
+- `skills/snap-goal-make/` turns rough intent into a complete Goal through guided conversation.
+- `skills/snap-goal-review/` independently checks Goal quality and returns a verdict.
+- `skills/task-decompose/` converts approved Goals into verifiable task cards.
 
-Keep skill-specific reference material under that skill's `references/`. Add agent configuration under that skill's `agents/` only when it is specific to a supported agent surface.
+Each skill keeps its executable contract in `SKILL.md`, launcher metadata in `agents/openai.yaml`, and supporting templates or rubrics in `references/`. Plugin metadata lives in `.codex-plugin/plugin.json`. Durable behavior cases are stored in `tests/*.json`; Python contract and evaluation harnesses live in `tmp_py/`. Design and implementation notes belong in `ai_docs/notes/`.
 
 ## Build, Test, and Development Commands
 
-There is no build step for this repository. Validate changes with lightweight checks:
+There is no compilation step. Use the project virtual environment for Python checks:
 
-- `rg --files` lists the complete tracked content shape.
-- `sed -n '1,220p' skills/task-decompose/SKILL.md` reviews the decomposition workflow.
-- `sed -n '1,220p' skills/task-decompose/references/task-card.md` reviews the handoff template.
-- `sed -n '1,220p' skills/snap-goal-review/SKILL.md` reviews the Goal reviewer.
-- `sed -n '1,260p' skills/snap-goal-make/SKILL.md` reviews the multi-turn Goal creation workflow.
-- `sed -n '1,260p' skills/snap-goal-make/references/goal-template.md` reviews the canonical Goal forms.
-- `python3 tmp_py/tmp_20260715_goal_make_contract.py` checks the Maker contract and fixture coverage.
-- `python3 /path/to/plugin-creator/scripts/validate_plugin.py .` validates plugin discovery metadata.
+```bash
+./venv/bin/python3 tmp_py/tmp_20260715_goal_make_contract.py
+./venv/bin/python3 tmp_py/tmp_20260715_goal_review_contract.py
+./venv/bin/python3 tmp_py/tmp_20260715_run_goal_make_evals.py --self-test
+./venv/bin/python3 tmp_py/tmp_20260715_run_goal_review_evals.py --fixtures --list
+jq empty .codex-plugin/plugin.json tests/goal-make-cases.json tests/goal-review-cases.json
+git diff --check
+```
 
-If you add generated validation scripts, place temporary scripts in `tmp_py/` and keep them out of the skill runtime unless they become intentionally maintained tooling.
+Run `--validate-existing` on the Maker harness to recheck retained behavior outputs without invoking a model. The Reviewer contract also validates the indexed multi-format corpus in `tests/goal-fixtures.json`; pass `--fixtures` to the Reviewer evaluation harness only when live behavioral evidence must be refreshed.
 
 ## Coding Style & Naming Conventions
 
-Use concise Markdown with clear headings and actionable bullets. Keep skill instructions imperative and specific: say what the agent should do, when to do it, and what output shape is expected.
-
-Use lowercase kebab-case for skill and directory names, such as `ai-task-decomposition`. YAML keys should remain snake_case where already established, for example `display_name` and `default_prompt`.
-
-Prefer ASCII punctuation in repository files unless a file already uses non-ASCII content for a clear reason.
+Write concise, imperative Markdown. State boundaries, required behavior, and output shapes explicitly. Keep skill directories and front-matter names in lowercase kebab-case; preserve established snake_case YAML keys such as `display_name` and `default_prompt`. Use ASCII punctuation unless localized content requires otherwise. Keep references inside the owning skill instead of creating cross-skill hidden dependencies.
 
 ## Testing Guidelines
 
-No automated test framework is configured. Before submitting changes, manually verify that:
-
-- Every `skills/*/SKILL.md` front matter includes valid `name` and `description` fields.
-- Each skill directory matches its front matter `name`.
-- Relative links and file references point to existing files within the owning skill.
-- Any task-card changes preserve all fields needed for handoff-ready work.
-- Goal Maker never scores or emits a review verdict as its own judgment.
-- Confirmed Goal drafts hand off to `$snap-goal-review`; approved Goals hand off unchanged to `$task-decompose`.
-- `tests/goal-make-cases.json` retains all required Discovery, Draft, Revision, Rejected, Approved, and bypass scenarios.
+Treat JSON cases as durable regression contracts. Every new behavior needs a focused case with required, forbidden, or structured assertions. Keep Maker creation separate from Reviewer scoring, preserve approved Goals unchanged, and map revisions back to `$snap-goal-make`. Before submitting, run both contract scripts, relevant harness checks, JSON validation, and `git diff --check`.
 
 ## Commit & Pull Request Guidelines
 
-Use simple imperative commit messages, such as `Add Goal review rubric`.
-
-Pull requests should include a short summary, the files changed, and a note on manual validation performed. Link related issues when available. Screenshots are usually unnecessary unless a tool renders this skill in a UI and the display text changes.
-
-## Agent-Specific Instructions
-
-When updating these skills, preserve the decomposition skill's core framing: tasks should be independently understandable, changeable, verifiable, and low-conflict. Avoid broad role-based splits unless they also match stable contracts and isolated verification exits.
+Use short imperative subjects matching repository history, for example `Refine Goal maker behavior fixtures`. Keep commits scoped to one protocol or validation change. Pull requests should summarize behavior changes, list affected skills, include exact validation commands and results, link related issues, and call out contract or handoff changes. Screenshots are needed only for user-visible rendered UI changes.
