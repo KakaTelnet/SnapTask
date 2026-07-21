@@ -17,6 +17,7 @@ There is no compilation step. Use the project virtual environment for Python che
 ```bash
 ./venv/bin/python3 tmp_py/tmp_20260715_goal_make_contract.py
 ./venv/bin/python3 tmp_py/tmp_20260715_goal_review_contract.py
+./venv/bin/python3 tmp_py/tmp_20260721_goal_review_consensus_contract.py
 ./venv/bin/python3 tmp_py/tmp_20260715_run_goal_make_evals.py --self-test
 ./venv/bin/python3 tmp_py/tmp_20260715_run_goal_review_evals.py --fixtures --list
 jq empty .codex-plugin/plugin.json tests/goal-make-cases.json tests/goal-review-cases.json

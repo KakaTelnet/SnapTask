@@ -48,7 +48,7 @@ def parse_args() -> argparse.Namespace:
     """Parse optional case selection and repeat count."""
     parser = argparse.ArgumentParser()
     parser.add_argument("--ids", help="Comma-separated case ids; default is all cases")
-    parser.add_argument("--repeat", type=int, default=1)
+    parser.add_argument("--repeat", type=int)
     parser.add_argument(
         "--fixtures",
         action="store_true",
@@ -60,6 +60,36 @@ def parse_args() -> argparse.Namespace:
         help="List selected cases after loading them without invoking a model",
     )
     return parser.parse_args()
+
+
+def resolve_repeat(fixtures: bool, requested: int | None) -> int:
+    """Return the requested run count or the stable default for the selected corpus."""
+    repeat = requested if requested is not None else (3 if fixtures else 1)
+    if repeat < 1:
+        raise ValueError("--repeat must be at least 1")
+    return repeat
+
+
+def summarize_consensus(
+    results: list[dict[str, object]],
+) -> dict[str, dict[str, int | bool]]:
+    """Aggregate isolated runs by case using a strict-majority pass threshold."""
+    summary: dict[str, dict[str, int | bool]] = {}
+    for result in results:
+        case_id = str(result["id"])
+        case_summary = summary.setdefault(
+            case_id,
+            {"passed_runs": 0, "total_runs": 0, "required_passes": 0, "passed": False},
+        )
+        case_summary["total_runs"] = int(case_summary["total_runs"]) + 1
+        if bool(result["passed"]):
+            case_summary["passed_runs"] = int(case_summary["passed_runs"]) + 1
+
+    for case_summary in summary.values():
+        required_passes = int(case_summary["total_runs"]) // 2 + 1
+        case_summary["required_passes"] = required_passes
+        case_summary["passed"] = int(case_summary["passed_runs"]) >= required_passes
+    return summary
 
 
 def language_instruction(language: str) -> str:
@@ -135,6 +165,10 @@ def review_case(codex: str, case: dict[str, object], run_number: int) -> dict[st
 def main() -> int:
     """Run selected evaluations and print a compact summary."""
     args = parse_args()
+    try:
+        repeat = resolve_repeat(args.fixtures, args.repeat)
+    except ValueError as error:
+        raise SystemExit(str(error)) from error
     if args.fixtures:
         cases = load_fixture_cases()
     else:
@@ -161,7 +195,7 @@ def main() -> int:
     results = [
         review_case(codex, case, run_number)
         for case in cases
-        for run_number in range(1, args.repeat + 1)
+        for run_number in range(1, repeat + 1)
     ]
     for result in results:
         marker = "PASS" if result["passed"] else "FAIL"
@@ -169,9 +203,23 @@ def main() -> int:
         for failure in result["failures"]:
             print(f"  - {failure}")
 
-    failed = sum(not result["passed"] for result in results)
-    print(f"EVAL SUMMARY: {len(results) - failed}/{len(results)} passed")
-    return 1 if failed else 0
+    failed_runs = sum(not result["passed"] for result in results)
+    print(f"RUN SUMMARY: {len(results) - failed_runs}/{len(results)} passed")
+
+    consensus = summarize_consensus(results)
+    for case_id, case_summary in consensus.items():
+        marker = "PASS" if case_summary["passed"] else "FAIL"
+        print(
+            f"{marker} CONSENSUS {case_id}: "
+            f"{case_summary['passed_runs']}/{case_summary['total_runs']} runs passed "
+            f"({case_summary['required_passes']} required)"
+        )
+    failed_cases = sum(not bool(item["passed"]) for item in consensus.values())
+    print(
+        f"EVAL SUMMARY: {len(consensus) - failed_cases}/{len(consensus)} cases "
+        "passed by consensus"
+    )
+    return 1 if failed_cases else 0
 
 
 if __name__ == "__main__":
