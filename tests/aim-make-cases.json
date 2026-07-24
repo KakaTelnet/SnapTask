@@ -1,0 +1,71 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "discovery-vague-intent-zh",
+      "mode": "discovery",
+      "language": "zh",
+      "reject_maker_judgment": true,
+      "input": "我想做一个开发者工具。现在开始帮我明确方向。",
+      "must_include": ["已确认", "暂定假设", "待确认"],
+      "must_exclude": ["审核结果:", "综合评分:", "通过: Approved"]
+    },
+    {
+      "id": "discovery-existing-draft-zh",
+      "mode": "discovery",
+      "language": "zh",
+      "reject_maker_judgment": true,
+      "input": "已有草案：做一个 CLI 工具帮团队自动生成 API 文档。目标是后端团队。不做 GUI。成功标准是至少 3 个团队使用且文档生成时间减少 50%。请只处理关键缺口。",
+      "must_include": ["已确认", "待确认"],
+      "must_exclude": ["请重新描述你的方向", "综合评分:"]
+    },
+    {
+      "id": "draft-complete-zh",
+      "mode": "draft",
+      "language": "zh",
+      "requires_complete_document": true,
+      "reject_maker_judgment": true,
+      "input": "方向已经明确：做一个本地优先的笔记应用。目标用户是开发者，需要支持 Markdown 和代码高亮。核心价值是数据完全由用户控制，不依赖云端。不做协作功能、不做移动端。成功标准是 100 个活跃用户且无数据丢失报告。生成完整 Aim。",
+      "must_include": ["背景", "目标用户", "核心价值", "不做的事", "成功标准"],
+      "must_exclude": ["审核结果:"]
+    },
+    {
+      "id": "discovery-multiple-initiatives-zh",
+      "mode": "discovery",
+      "language": "zh",
+      "reject_maker_judgment": true,
+      "input": "我要做一个 SaaS 平台，包括用户系统、支付、数据分析、实时通知、文件管理。开始吧。",
+      "must_include": ["待确认"],
+      "must_include_any": [["拆成多个", "多个独立", "选一个"]],
+      "must_exclude": ["审核结果:"]
+    },
+    {
+      "id": "discovery-labeled-assumption-zh",
+      "mode": "discovery",
+      "language": "zh",
+      "reject_maker_judgment": true,
+      "input": "目标是给内部团队做一个部署面板。技术栈用现有的这套就行，你可以假设。",
+      "must_include": ["暂定假设"],
+      "must_exclude": ["用户已确认", "综合评分:"]
+    },
+    {
+      "id": "revision-complete-regeneration-zh",
+      "mode": "revision",
+      "language": "zh",
+      "requires_complete_document": true,
+      "reject_maker_judgment": true,
+      "input": "当前 Aim：做一个代码审查 bot，目标用户是小型团队，核心价值是减少人工 review 时间，不做自动修复，成功标准是 review 时间减少 30%。Reviewer 返回修订: Revision Required。问题：目标用户太模糊。影响：无法判断功能优先级。修改要求：明确团队规模和 tech stack。我的决定：5-20 人的团队，使用 GitHub 生态。现在重新生成完整 Aim。",
+      "must_include": ["背景", "目标用户", "5-20", "GitHub", "成功标准"],
+      "must_exclude": ["综合评分:"]
+    },
+    {
+      "id": "approved-handoff-zh",
+      "mode": "approved_handoff",
+      "language": "zh",
+      "reject_maker_judgment": true,
+      "input": "当前 Aim 已通过 aim-review。背景：内部 API 文档分散在多个仓库且格式不一致。目标用户：后端和前端工程师。核心价值：统一文档格式，减少跨团队沟通成本。不做的事：不改变 API 实现、不做 API 网关。成功标准：所有内部 API 有统一格式的文档，新成员 onboarding 时间减半。请处理 handoff。",
+      "must_include": ["$plan-make", "审核结果"],
+      "must_exclude": ["Aim Draft", "请确认"]
+    }
+  ]
+}

@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "cases": [
+    {
+      "id": "approved-complete-zh",
+      "language": "zh",
+      "expected_status": "通过: Approved",
+      "aim": "背景: 团队 API 文档分散在三个仓库，格式不一致，新成员 onboarding 平均需要两周才能独立调用内部 API。目标用户: 后端和前端工程师，约 30 人。核心价值: 统一文档格式为 OpenAPI 3.0，减少跨团队沟通成本，新成员 onboarding 从两周降到三天。不做的事: 不改变现有 API 实现，不做 API 网关或限流，不覆盖第三方 API。成功标准: 所有内部 API 有统一格式的文档，新成员首次成功调用 API 的时间在三天以内。"
+    },
+    {
+      "id": "revision-vague-users-zh",
+      "language": "zh",
+      "expected_status": "修订: Revision Required",
+      "aim": "背景: 需要一个更好的部署工具。目标用户: 所有人。核心价值: 让部署更简单。不做的事: 还没想好。成功标准: 用户满意。"
+    },
+    {
+      "id": "rejected-no-problem-en",
+      "language": "en",
+      "expected_status": "驳回: Rejected",
+      "aim": "Make a great app. Everyone will love it. It will be the best."
+    },
+    {
+      "id": "revision-missing-boundaries-zh",
+      "language": "zh",
+      "expected_status": "修订: Revision Required",
+      "aim": "背景: 当前日志系统在高峰期丢失约 5% 的条目。目标用户: SRE 和 on-call 工程师。核心价值: 零丢失的日志收集，提升故障排查可靠性。不做的事: 未指定。成功标准: 高峰期日志丢失率从 5% 降到 0.01% 以下。"
+    },
+    {
+      "id": "revision-subjective-success-en",
+      "language": "en",
+      "expected_status": "修订: Revision Required",
+      "aim": "Background: The search page is slow. Target users: all customers. Core value: make search feel fast and delightful. Not doing: backend changes. Success criteria: users feel the improvement."
+    },
+    {
+      "id": "approved-tight-scope-zh",
+      "language": "zh",
+      "expected_status": "通过: Approved",
+      "aim": "背景: CI 流水线中 flaky test 占比从 2% 上升到 8%，每次 PR 平均需要重跑 1.5 次。目标用户: 所有提交 PR 的开发者，约 50 人。核心价值: 通过识别和修复 top-10 flaky tests，将重跑率降到 1.1 以下，每天节省约 3 小时合计等待时间。不做的事: 不重写测试框架，不添加新测试，不修改 CI 基础设施。成功标准: flaky test 占比回到 2% 以下，PR 平均重跑次数降到 1.1 以下。"
+    },
+    {
+      "id": "rejected-contradictory-zh",
+      "language": "zh",
+      "expected_status": "驳回: Rejected",
+      "aim": "背景: 需要重写整个系统。目标用户: 所有现有用户和新用户。核心价值: 用微服务架构替换单体，同时保持完全向后兼容且零停机。不做的事: 不改变任何 API。成功标准: 系统完全迁移到微服务，所有现有测试通过。"
+    },
+    {
+      "id": "revision-no-exclusion-tight-zh",
+      "language": "zh",
+      "expected_status": "通过: Approved",
+      "aim": "背景: README 中的快速入门示例因 API 重命名而过时，新用户无法按文档跑通。目标用户: 首次使用本项目的新开发者。核心价值: 修复快速入门路径，让新用户能在 5 分钟内跑通第一个示例。不做的事: 这是一个原子修改 —— 只修正示例代码中的 API 名称，不重写文档结构。成功标准: 新用户按 README 步骤执行，5 分钟内得到示例输出。"
+    }
+  ]
+}
