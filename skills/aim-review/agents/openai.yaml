@@ -1,0 +1,4 @@
+interface:
+  display_name: "Aim Review"
+  short_description: "Review aim document quality with clear, constructive feedback"
+  default_prompt: "Use $aim-review to assess this aim document without rewriting it."
