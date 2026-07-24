@@ -1,0 +1,4 @@
+interface:
+  display_name: "Aim Make"
+  short_description: "Clarify project intent into a complete aim document"
+  default_prompt: "Use $aim-make to turn this intent into a complete aim through multi-turn conversation, then hand the confirmed aim to $aim-review."
